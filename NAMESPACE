@@ -11,3 +11,5 @@
 # zoombox ,zoomsregion,plotHic2,highlighthic)
 
 
+export(plotBedgraph)
+
