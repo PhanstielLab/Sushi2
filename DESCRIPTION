@@ -1,0 +1,14 @@
+Package: Sushi2
+Type: Package
+Title: blah
+Description: blah
+Version: 0.0.1
+Date: 2017-08-28
+Author: Douglas H Phanstiel <dphansti@stanford.edu>
+Maintainer: Douglas H Phanstiel <dphansti@stanford.edu>
+License: GPL (>= 2)
+Depends:
+    R (>= 2.10)
+Imports:
+    graphics
+RoxygenNote: 5.0.1
