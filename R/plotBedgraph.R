@@ -23,7 +23,6 @@
 #' plottype
 #' @param bty A character string which determined the type of box which is drawn about plots.  See \code{\link{par}}
 #' @param ymax fraction of max y value to set as height of plot.
-#' @param colorbycol palette to use to shade the signal track plot.  Only applicable when overlay is set to FALSE.
 #' @param ... values to be passed to \code{\link{plot}}
 #' @export
 #' @examples
@@ -49,8 +48,7 @@
 plotBedgraph <-
   function(signal,chrom,chromstart,chromend,range=NULL,color=SushiColors(2)(2)[1],
            lwd=1,linecolor=NA,addscale=FALSE,overlay=FALSE,rescaleoverlay=FALSE,transparency=1.0,
-           flip=FALSE, xaxt='none',yaxt='none',xlab="",ylab="",xaxs="i",yaxs="i",bty='n',ymax=1.04,
-           colorbycol=NULL,...)
+           flip=FALSE, xaxt='none',yaxt='none',xlab="",ylab="",xaxs="i",yaxs="i",bty='n',ymax=1.04, binSize=NA, binForce=FALSE,...)
   {
     if (overlay == TRUE)
     {
@@ -60,6 +58,11 @@ plotBedgraph <-
     if(is.na(linecolor ) == TRUE)
     {
       linecolor = color
+    }
+    
+    if(is.na(binSize) == TRUE)
+    {
+      binSize = (chromend - chromstart)/100
     }
     
     # ensure that the chromosome is a character
@@ -90,23 +93,46 @@ plotBedgraph <-
       return ("not enough data within range to plot")
     }
     
-    # downsample for plotting
-    while (nrow(signaltrack) > 8000)
-    {
-      # downsample for plotting if neccesary
-      if (nrow(signaltrack) %% 2 != 0)
-      {
-        signaltrack = signaltrack[1:(nrow(signaltrack)-1),]
-      }
-      
-      starts = signaltrack[seq(1, nrow(signaltrack), 2),1]
-      stops  = signaltrack[seq(2, nrow(signaltrack), 2),2]
-      meanval = apply(cbind(signaltrack[seq(1, nrow(signaltrack), 2),3],signaltrack[seq(2, nrow(signaltrack), 2),3]), 1, mean)
-      signaltrack = cbind(starts,stops,meanval)
+    binNum = (chromend - chromstart)/binSize
+    
+    # scale back binNum and print warning if binNum is greater than 8000
+    if(binNum > 8000 && binForce == F){
+      binNum = 8000
+      binSize = (chromend - chromstart)/binNum
+      warning(paste0("Too many bins: adjusting to 8000 bins of size ", binSize, ". To override try binForce = T."))
     }
     
-    # add col names
-    names(signaltrack)[(1:3)]    = c("V1","V2","V3")
+    # scale bin size to 1 if binNum is larger than span
+    if (binNum > (chromend - chromstart)){
+      binNum = (chromend - chromstart)
+      binSize = 1
+      warning(paste0("Number of bins larger than plot length: adjusting to ", binNum, " bins of size 1."))
+    } 
+    
+    # if (nrow(signaltrack) %% binSize != 0) # remove the extra rows that won't fit evenly into a bin
+    # {
+    #   signaltrack = signaltrack[1:(nrow(signaltrack)-(nrow(signaltrack) %% binSize)),]
+    # }
+    
+    bin.dataframe <- data.frame(seq(chromstart, chromend-binSize, binSize), seq(chromstart+binSize, chromend, binSize), rep(0, times=binNum))
+    
+    # add column names
+    colnames(bin.dataframe) = c("V1", "V2", "V3")
+    
+    # find the max signal values for each bin
+    bin.signal <- function(line){ 
+      signal=signaltrack
+      line = as.integer(line)
+      list=c(0)
+      list = append(list, signal[,3][which((signal[,1] >= line[1] & signal[,1] < line[2]) |
+                                             signal[,2] > line[1] & signal[,2] <= line[2] |
+                                             signal[,1] < line[1] & signal[,2] > line[2])])
+      return(max(list))
+    }
+    bin.dataframe[,3] = apply(bin.dataframe, 1, bin.signal) 
+    
+    # use binned data as signal track
+    signaltrack = bin.dataframe
     
     # make linking regions if neccesary
     linkingregions = cbind(signaltrack[1:(nrow(signaltrack)-1),2], signaltrack[2:nrow(signaltrack),1])
@@ -151,7 +177,7 @@ plotBedgraph <-
     if (overlay == FALSE)
     {
       # make blank plot
-      plot(signaltrack,xlim=c(chromstart,chromend),type='n',ylim=range,xaxt=xaxt,yaxt=yaxt,ylab=ylab,xaxs=xaxs,yaxs=yaxs,bty=bty,xlab=xlab,...) 
+      plot(signaltrack,xlim=c(chromstart,chromend),type='n',ylim=range,xaxt=xaxt,yaxt=yaxt,ylab=ylab,xaxs=xaxs,yaxs=yaxs,bty=bty,xlab=xlab) 
     }
     
     # rescale the overlay plot for comparative purposes
@@ -172,56 +198,8 @@ plotBedgraph <-
     rgbcol = col2rgb(color)
     finalcolor = rgb(rgbcol[1],rgbcol[2],rgbcol[3],alpha=transparency * 255,maxColorValue = 255)
     
-    if (is.null(colorbycol) == FALSE)
-    {
-      # add the gradient to the background
-      if (is.null(colorbycol) == FALSE)
-      {
-        plotlef = par('usr')[1]
-        plotrig = par('usr')[2]
-        plotbot = par('usr')[3]
-        plottop = par('usr')[4]
-        
-        bgcol = maptocolors((1:100),colorbycol)
-        
-        if (flip == FALSE)
-        {
-          tops = seq(plotbot,plottop,length.out=101)[2:101]  
-          bots =  seq(plotbot,plottop,length.out=101)[1:100]
-        }
-        if (flip == TRUE)
-        {
-          bots =  rev(seq(plotbot,plottop,length.out=101)[2:101])
-          tops =  rev(seq(plotbot,plottop,length.out=101)[1:100] )
-        }
-        
-        for (i in (3:(nrow(signaltrack)-1)))
-        {
-          if (flip == FALSE)
-          {
-            ybots = bots[which(bots <= signaltrack[i,2])]
-            ytops = tops[which(tops <  signaltrack[i,2])]
-          }
-          if (flip == TRUE)
-          {
-            ybots = bots[which(bots >= signaltrack[i,2])]
-            ytops = tops[which(tops >  signaltrack[i,2])]
-          }
-          ytops = c(ytops,signaltrack[i,2] )
-          xleft = rep(signaltrack[i-1,1],length(ytops))
-          xrigh = rep(signaltrack[i,1],length(ytops))
-          xybgcol = bgcol[1:length(ytops)]
-          
-          rect(xleft=xleft, ybottom=ybots, xright=xrigh, ytop=ytops,col= xybgcol,border=bgcol,lwd=lwd) 
-        } 
-      }
-    }
-    
-    if (is.null(colorbycol) == TRUE)
-    {
-      # plot the signal track
-      polygon(signaltrack,col=finalcolor,border=linecolor,lwd=lwd)
-    }
+    # plot the signal track
+    polygon(signaltrack,col=finalcolor,border=linecolor,lwd=lwd)
     
     # add scale to upper right corner
     if (addscale == TRUE)
