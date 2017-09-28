@@ -23,6 +23,8 @@
 #' plottype
 #' @param bty A character string which determined the type of box which is drawn about plots.  See \code{\link{par}}
 #' @param ymax fraction of max y value to set as height of plot.
+#' @param binSize the length of each bin in bp
+#' @param binCap TRUE/FALSE whether the function will limit the number of bins to 8,000
 #' @param ... values to be passed to \code{\link{plot}}
 #' @export
 #' @examples
@@ -48,7 +50,7 @@
 plotBedgraph <-
   function(signal,chrom,chromstart,chromend,range=NULL,color=SushiColors(2)(2)[1],
            lwd=1,linecolor=NA,addscale=FALSE,overlay=FALSE,rescaleoverlay=FALSE,transparency=1.0,
-           flip=FALSE, xaxt='none',yaxt='none',xlab="",ylab="",xaxs="i",yaxs="i",bty='n',ymax=1.04, binSize=NA, binForce=FALSE,...)
+           flip=FALSE, xaxt='none',yaxt='none',xlab="",ylab="",xaxs="i",yaxs="i",bty='n',ymax=1.04, binSize=NA, binCap=TRUE,...)
   {
     if (overlay == TRUE)
     {
@@ -96,10 +98,10 @@ plotBedgraph <-
     binNum = (chromend - chromstart)/binSize
     
     # scale back binNum and print warning if binNum is greater than 8000
-    if(binNum > 8000 && binForce == F){
+    if(binNum > 8000 && binCap == TRUE){
       binNum = 8000
       binSize = (chromend - chromstart)/binNum
-      warning(paste0("Too many bins: adjusting to 8000 bins of size ", binSize, ". To override try binForce = T."))
+      warning(paste0("Too many bins: adjusting to 8000 bins of size ", binSize, ". To override try binCap = FALSE."))
     }
     
     # scale bin size to 1 if binNum is larger than span
