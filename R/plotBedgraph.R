@@ -64,7 +64,7 @@ plotBedgraph <-
     
     if(is.na(binSize) == TRUE)
     {
-      binSize = (chromend - chromstart)/100
+      binSize = (chromend - chromstart)/2000
     }
     
     # ensure that the chromosome is a character
