@@ -1,65 +1,78 @@
+#' plots hotmap
+#'
+#'
+#' @param ourmatrix matrix to biuld hotmap from
+#' @param colors colors to use for heatmap
+#' @export
 
 
-
+#' @examples
+#' 
+#' x = c(10,20,30,40,50,60)
+#' mat = matrix( data =  x,nrow = 3, byrow= FALSE)
+#' hotmap(mat)
 
 
 # Define a function to plot a heatmap from a matrix
-hotmap <- function(ourmatrix,colors)
+hotmap <- function(ourmatrix,colors,gaps=NULL,gapsize=.025)
 {
-  # for testing (delete before using)
-   ourmatrix = mat
-
+  
   # determine size of plot
   ourxlim = c(0, ncol(ourmatrix))
   ourylim = c(0, nrow(ourmatrix))
   
+  # add gaps if neccesary
+  
+  # add room for row and column colors if required
+
   # make a blank plot
   plot(1,type='n',
-       
+
        # set x and y axes coordinates
        xlim=ourxlim ,
-       ylim=ourylim, 
-       
+       ylim=ourylim,
+
        # use the exact xlim and ylim values
-       xaxs= 'i', 
+       xaxs= 'i',
        yaxs = 'i',
-       
+
        # don't add tick marks
        xaxt='n',
        yaxt='n',
-       
+
        # don't add axis labels
-       ann = FALSE
+       ann = FALSE,
+       bty = 'n'
        )
+
+  # convert to 3 column format
+  threecol = setNames(melt(ourmatrix), c('row', 'column', 'vals'))
   
   # convert numbers to colors
-  newcolors = map2color(ourmatrix)
+  threecol$color = map2color(threecol$vals)
   
-  # set the y coordinates
-  xlefts = c()
-  for (i in (0:(ncol(ourmatrix)-1)))
-  {
-    xlefts = c(xlefts, rep(i, nrow(ourmatrix)))
-  }
+  # establish rectangle coordinates
+  threecol$x0 = threecol$column - 1
+  threecol$x1 = threecol$column
+  threecol$y0 = nrow(ourmatrix) - threecol$row
+  threecol$y1 = threecol$y0 + 1
   
   # plot the data
-  rect(xleft= xlefts,
-       xright = xlefts +1,
-       ybottom = rep(seq(nrow(ourmatrix)-1,0),ncol(ourmatrix)), 
-       ytop =  rep(seq(nrow(ourmatrix),1),ncol(ourmatrix)),
-        col = newcolors
+  rect(xleft= threecol$x0,
+       xright = threecol$x1,
+       ybottom = threecol$y0,
+       ytop =  threecol$y1,
+        col = threecol$color,border = NA
        )
+  
+  
+  # add labels
+  
+  # add large labels
+  
 }
 
 
 
 
 
-# make a list (vector of numbers)
-x = c(10,20,30,40)
-
-# convert that vector into a 2 x 2 matrix
-mat = matrix( data =  x,nrow = 2, byrow= TRUE)
-
-# plot hotmap
-hotmap(mat)
