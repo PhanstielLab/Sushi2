@@ -11,5 +11,5 @@
 # zoombox ,zoomsregion,plotHic2,highlighthic)
 
 
-export(plotBedgraph)
+export(plotBedgraph,map2color,hotmap)
 

@@ -8,7 +8,11 @@
 
 
 #' @examples
-#'
+#' x = 1:10
+#' y = rep(1,10)
+#' pal = colorRampPalette(c("red","green","blue"))(10)
+#' cols = map2color(x,pal=pal)
+#' plot(x=x,y=y,col=cols,pch=19)
 
 # modified from response here (https://stackoverflow.com/questions/15006211/how-do-i-generate-a-mapping-from-numbers-to-colors-in-r)
 map2color <- function(x=NULL,pal=colorRampPalette(c("deepskyblue2","black","gold"))(100),limits=NULL)
