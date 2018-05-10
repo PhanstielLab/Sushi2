@@ -11,17 +11,17 @@
 #' @export
 #' @examples
 #' 
-#' x = c(10,20,30,40,50,60)
-#' mat = matrix( data =  x,nrow = 3, byrow= FALSE)
-#' hotmap(mat)
-#' 
-#' 
-#' a = readRDS("~/Dropbox/Work/Projects/Ongoing/Sushi2/extradata/ordered.matrix.RDS")
-#' colnames(a) = c("0.0","0.5","1.0","1.5","2","4","6")
-#' rowcolors = rep("black",nrow(a))
-#' rowcolors[1:1315] = "firebrick2"
-#' rowcolors[1:750]  = "grey"
-#' hotmap(a,labrow = F,gaps=c(750,1315),rowcolors=rowcolors)
+# x = c(10,20,30,40,50,60)
+# mat = matrix( data =  x,nrow = 3, byrow= FALSE)
+# hotmap(mat)
+# 
+# par(mgp=c(3,.3,0))
+# a = readRDS("~/Dropbox/Work/Projects/Ongoing/Sushi2/extradata/ordered.matrix.RDS") # this should be in the Sushi2 data dir
+# colnames(a) = c("0.0","0.5","1.0","1.5","2","4","6")
+# rowcolors = rep("black",nrow(a))
+# rowcolors[1:1315] = "firebrick2"
+# rowcolors[1:750]  = "grey"
+# hotmap(a,labrow = F,gaps=c(750,1315),rowcolors=rowcolors)
 #' 
 #' 
 #' 
