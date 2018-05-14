@@ -14,6 +14,8 @@
 #' @param ylab.cex magnification level of x axis font
 #' @param ylab.font font type of y axis font
 #' @param radius (if selectylabs is not empty)
+#' @param selectylabs.col single color or vector of colors for y axis labels
+#' @param selectylabs.linecol single color or vector of colors for lines to y axis labels
 #' @export
 #' @examples
 #' 
@@ -38,7 +40,8 @@
 # Define a function to plot a heatmap from a matrix
 hotmap <- function(ourmatrix,colors,labrow=TRUE,labcol=TRUE,gaps=NULL,gapsize=.025,rowcolors=NULL,
                    xlab.cex=1,xlab.font=1,
-                   selectylabs = c(),ylab.dist=0.05,ylab.cex=1,ylab.font=1,
+                   selectylabs = c(),selectylabs.col="black",selectylabs.linecol="black",
+                   ylab.dist=0.05,ylab.cex=1,ylab.font=1,
                    radius = 0.01)
 {
   if (length(selectylabs) > 0)
@@ -194,10 +197,10 @@ hotmap <- function(ourmatrix,colors,labrow=TRUE,labcol=TRUE,gaps=NULL,gapsize=.0
     
     # add lines and labels
     par(xpd=TRUE)
-    segments(x0=x0,x1 = x1,y0=origpos,y1=newpos)
-    segments(x0=x1,x1 = x2,y0=newpos,y1=newpos)
+    segments(x0=x0,x1 = x1,y0=origpos,y1=newpos,col=selectylabs.linecol)
+    segments(x0=x1,x1 = x2,y0=newpos,y1=newpos,col=selectylabs.linecol)
 
-    text(x = x3, y = newpos,labels = names(newpos) ,adj = 1,cex = ylab.cex, font = ylab.font)
+    text(x = x3, y = newpos,labels = names(newpos) ,adj = 1,cex = ylab.cex, font = ylab.font,col=selectylabs.col)
     par(xpd=TRUE)
   }
   
