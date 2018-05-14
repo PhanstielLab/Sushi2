@@ -4,8 +4,8 @@ Title: blah
 Description: blah
 Version: 0.0.1
 Date: 2017-08-28
-Author: Douglas H Phanstiel <dphansti@stanford.edu>
-Maintainer: Douglas H Phanstiel <dphansti@stanford.edu>
+Author: Douglas H Phanstiel <douglas_phanstiel@med.unc.edu>
+Maintainer: Douglas H Phanstiel <douglas_phanstiel@med.unc.edu>
 License: GPL (>= 2)
 Depends:
     R (>= 2.10)

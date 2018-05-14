@@ -4,19 +4,61 @@
 \alias{hotmap}
 \title{plots hotmap}
 \usage{
-hotmap(ourmatrix, colors, gaps = NULL, gapsize = 0.025)
+hotmap(ourmatrix, colors, labrow = TRUE, labcol = TRUE, gaps = NULL,
+  gapsize = 0.025, rowcolors = NULL, xlab.cex = 1, xlab.font = 1,
+  selectylabs = c(), ylab.dist = 0.05, ylab.cex = 1, ylab.font = 1,
+  radius = 0.01)
 }
 \arguments{
 \item{ourmatrix}{matrix to biuld hotmap from}
 
 \item{colors}{colors to use for heatmap}
+
+\item{labrow}{boolean whether or not rows should be labeled}
+
+\item{labcol}{boolean whether or not rows should be labeled}
+
+\item{gaps}{vector of rows after which a gap should be inserted}
+
+\item{gapsize}{size of each gap as a fraction of the entire height of the hotmap}
+
+\item{rowcolors}{a matrix of colors to be plotted to the side of each row}
+
+\item{xlab.cex}{magnification level of x axis font}
+
+\item{xlab.font}{font type of x axis font}
+
+\item{selectylabs}{names of rows to be labeled on y axis}
+
+\item{ylab.dist}{the distance (line) away from the y axis that labels whould be written}
+
+\item{ylab.cex}{magnification level of x axis font}
+
+\item{ylab.font}{font type of y axis font}
+
+\item{radius}{(if selectylabs is not empty)}
 }
 \description{
 plots hotmap
 }
 \examples{
 
-x = c(10,20,30,40,50,60)
-mat = matrix( data =  x,nrow = 3, byrow= FALSE)
-hotmap(mat)
+
+
+data(SushiRNA)
+colnames(SushiRNA) = c("0.0","0.5","1.0","1.5","2","4","6")
+# first row colors
+rowcolors = rep("black",nrow(a))
+rowcolors[1:750]  = "grey"
+rowcolors[751:1315] = "firebrick2"
+par(mar=c(3,5,2,2))
+par(mgp=c(3,.05,0))
+test = sample(rownames(a),30)
+hotmap(SushiRNA,labrow = F,gaps=c(750,1315),rowcolors=rowcolors,
+       xlab.cex=0.6,ylab.cex=0.4,ylab.font=1,
+       selectylabs = test,ylab.dist=0.05,radius = .01)
+
+mtext(side=1,line=1.0,font=2,text="Time (h) after LPS/IFNg treatment",cex=.75)
+
+
 }
