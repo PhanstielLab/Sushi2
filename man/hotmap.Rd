@@ -6,8 +6,9 @@
 \usage{
 hotmap(ourmatrix, colors, labrow = TRUE, labcol = TRUE, gaps = NULL,
   gapsize = 0.025, rowcolors = NULL, xlab.cex = 1, xlab.font = 1,
-  selectylabs = c(), ylab.dist = 0.05, ylab.cex = 1, ylab.font = 1,
-  radius = 0.01)
+  selectylabs = c(), selectylabs.label = NULL, selectylabs.col = "black",
+  selectylabs.linecol = "black", ylab.dist = 0.05, ylab.cex = 1,
+  ylab.font = 1, radius = 0.01)
 }
 \arguments{
 \item{ourmatrix}{matrix to biuld hotmap from}
@@ -29,6 +30,12 @@ hotmap(ourmatrix, colors, labrow = TRUE, labcol = TRUE, gaps = NULL,
 \item{xlab.font}{font type of x axis font}
 
 \item{selectylabs}{names of rows to be labeled on y axis}
+
+\item{selectylabs.label}{optional vector of labels for y axis labels}
+
+\item{selectylabs.col}{single color or vector of colors for y axis labels}
+
+\item{selectylabs.linecol}{single color or vector of colors for lines to y axis labels}
 
 \item{ylab.dist}{the distance (line) away from the y axis that labels whould be written}
 
