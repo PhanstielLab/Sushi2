@@ -208,7 +208,9 @@ hotmap <- function(ourmatrix,colors,labrow=TRUE,labcol=TRUE,gaps=NULL,gapsize=.0
     }
     if (is.null(selectylabs.label)==FALSE)
     {
-      labels = selectylabs.label
+      newlabels = selectylabs.label
+      names(newlabels) = selectylabs
+      labels = newlabels[names(newpos)]
     }
     text(x = x3, y = newpos,labels = labels ,adj = 1,cex = ylab.cex, font = ylab.font,col=selectylabs.col)
     par(xpd=TRUE)
