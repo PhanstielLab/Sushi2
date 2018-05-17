@@ -39,13 +39,16 @@
 #'
 #'
 # Define a function to plot a heatmap from a matrix
-hotmap <- function(ourmatrix,colors,labrow=TRUE,labcol=TRUE,gaps=NULL,gapsize=.025,rowcolors=NULL,
+hotmap <- function(ourmatrix,colors=colorRampPalette(c("deepskyblue2","black","gold"))(100),labrow=TRUE,labcol=TRUE,gaps=NULL,gapsize=.025,rowcolors=NULL,
                    xlab.cex=1,xlab.font=1,
                    selectylabs = c(),selectylabs.label=NULL,
                    selectylabs.col="black",selectylabs.linecol="black",
                    ylab.dist=0.05,ylab.cex=1,ylab.font=1,
                    radius = 0.01)
 {
+  
+  colorpal = colors
+  
   if (length(selectylabs) > 0)
   {
     if (radius > 1/(3*length(selectylabs)))
@@ -133,7 +136,7 @@ hotmap <- function(ourmatrix,colors,labrow=TRUE,labcol=TRUE,gaps=NULL,gapsize=.0
   threecol$colnames = colnamesforlater
   
   # convert numbers to colors
-  threecol$color = map2color(threecol$vals)
+  threecol$color = map2color(threecol$vals,pal=colorpal)
   
   # establish rectangle coordinates
   threecol$x0 = threecol$column - 1

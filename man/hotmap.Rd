@@ -4,7 +4,8 @@
 \alias{hotmap}
 \title{plots hotmap}
 \usage{
-hotmap(ourmatrix, colors, labrow = TRUE, labcol = TRUE, gaps = NULL,
+hotmap(ourmatrix, colors = colorRampPalette(c("deepskyblue2", "black",
+  "gold"))(100), labrow = TRUE, labcol = TRUE, gaps = NULL,
   gapsize = 0.025, rowcolors = NULL, xlab.cex = 1, xlab.font = 1,
   selectylabs = c(), selectylabs.label = NULL, selectylabs.col = "black",
   selectylabs.linecol = "black", ylab.dist = 0.05, ylab.cex = 1,
@@ -55,12 +56,12 @@ plots hotmap
 data(SushiRNA)
 colnames(SushiRNA) = c("0.0","0.5","1.0","1.5","2","4","6")
 # first row colors
-rowcolors = rep("black",nrow(a))
+rowcolors = rep("black",nrow(SushiRNA))
 rowcolors[1:750]  = "grey"
 rowcolors[751:1315] = "firebrick2"
 par(mar=c(3,5,2,2))
 par(mgp=c(3,.05,0))
-test = sample(rownames(a),30)
+test = sample(rownames(SushiRNA),30)
 hotmap(SushiRNA,labrow = F,gaps=c(750,1315),rowcolors=rowcolors,
        xlab.cex=0.6,ylab.cex=0.4,ylab.font=1,
        selectylabs = test,ylab.dist=0.05,radius = .01)
