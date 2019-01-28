@@ -1,5 +1,5 @@
 
-importFrom(reshape2,melt)
+importFrom(reshape2, melt)
 
-export(plotBedgraph, map2color ,hotmap)
+export(plotBedgraph, map2color, hotmap, read.bigwig)
 

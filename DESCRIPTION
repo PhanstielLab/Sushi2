@@ -10,5 +10,5 @@ License: GPL (>= 2)
 Depends:
     R (>= 2.10)
 Imports:
-    graphics, reshape2
+    graphics, reshape2, rtracklayer
 RoxygenNote: 6.0.1
