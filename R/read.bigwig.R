@@ -19,6 +19,7 @@ read.bigwig <- function(filename, chromosome=NULL, start=1, end=.Machine$integer
   }
   if(!is.null(chromosome)) {
     as.data.frame(import.bw(filename, which=GRanges(paste0(chromosome, ':', start, '-', end, ':', strand))))
+  } else {
+    as.data.frame(import.bw(filename))
   }
-  as.data.frame(import.bw(filename))
 }
